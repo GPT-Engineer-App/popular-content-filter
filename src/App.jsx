@@ -1,15 +1,11 @@
-import { ChakraProvider, Box, Heading, Text } from "@chakra-ui/react";
+import { ChakraProvider, Box } from "@chakra-ui/react";
+import MostWatchedContent from './components/MostWatchedContent';
 
 function App() {
   return (
     <ChakraProvider>
       <Box textAlign="center" py={10} px={6}>
-        <Heading as="h1" size="2xl" mb={4}>
-          Hello world!
-        </Heading>
-        <Text fontSize="xl">
-          Welcome to your new React app with Chakra UI and Axios!
-        </Text>
+        <MostWatchedContent />
       </Box>
     </ChakraProvider>
   );
