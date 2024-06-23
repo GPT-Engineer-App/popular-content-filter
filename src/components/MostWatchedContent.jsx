@@ -16,10 +16,10 @@ const MostWatchedContent = () => {
       setLoading(true);
       try {
         const [rottenTomatoesData, imdbData, omdbData, tmdbData] = await Promise.all([
-          fetchRottenTomatoesRatings('most watched'),
-          fetchImdbRatings('most watched'),
-          fetchOmdbRatings('most watched'),
-          fetchTmdbRatings('most watched')
+          fetchRottenTomatoesRatings('most watched', filters, sorting),
+          fetchImdbRatings('most watched', filters, sorting),
+          fetchOmdbRatings('most watched', filters, sorting),
+          fetchTmdbRatings('most watched', filters, sorting)
         ]);
 
         // Combine and process data from all APIs as needed
