@@ -6,6 +6,8 @@ const NavBar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const bg = useColorModeValue('gray.100', 'gray.900');
   const color = useColorModeValue('black', 'white');
+  const linkColor = useColorModeValue('blue.600', 'blue.300');
+  const linkHoverColor = useColorModeValue('blue.800', 'blue.500');
 
   return (
     <Box bg={bg} px={4}>
@@ -13,10 +15,10 @@ const NavBar = () => {
         <Box color={color}>Logo</Box>
         <Flex alignItems={'center'}>
           <Stack direction={'row'} spacing={7}>
-            <Link as={RouterLink} to="/" color={color}>Home</Link>
-            <Link as={RouterLink} to="/dashboard" color={color}>Dashboard</Link>
-            <Link as={RouterLink} to="/profile" color={color}>Profile</Link>
-            <Link as={RouterLink} to="/projects" color={color}>Projects</Link>
+            <Link as={RouterLink} to="/" color={linkColor} _hover={{ color: linkHoverColor }}>Home</Link>
+            <Link as={RouterLink} to="/dashboard" color={linkColor} _hover={{ color: linkHoverColor }}>Dashboard</Link>
+            <Link as={RouterLink} to="/profile" color={linkColor} _hover={{ color: linkHoverColor }}>Profile</Link>
+            <Link as={RouterLink} to="/projects" color={linkColor} _hover={{ color: linkHoverColor }}>Projects</Link>
             <Button onClick={toggleColorMode}>
               {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
             </Button>
