@@ -12,6 +12,7 @@ const MostWatchedContent = () => {
   const [genres, setGenres] = useState(['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi']);
   const [weeklySummary, setWeeklySummary] = useState(null);
   const [error, setError] = useState(null);
+  const [trendingContent, setTrendingContent] = useState([]);
 
   const fetchWeeklySummary = async () => {
     try {
@@ -44,10 +45,37 @@ const MostWatchedContent = () => {
     }
   };
 
+  const fetchTrendingContent = async () => {
+    try {
+      const response = await axios.get('https://api.example.com/trending-content');
+      setTrendingContent(response.data);
+    } catch (error) {
+      console.error('Error fetching trending content:', error);
+      setError('Failed to fetch trending content. Please try again later.');
+    }
+  };
+
   useEffect(() => {
     fetchData();
     fetchWeeklySummary();
+    fetchTrendingContent();
   }, [filters, sorting]);
+
+  const TrendingContent = ({ content }) => (
+    <Box mt={8} p={4} borderWidth="1px" borderRadius="lg">
+      <Heading size="lg">Trending Content</Heading>
+      {content.length > 0 ? (
+        content.map((item, index) => (
+          <Box key={index} p={4} borderWidth="1px" borderRadius="lg" mb={4}>
+            <Heading size="md">{item.title}</Heading>
+            <Text>{item.description}</Text>
+          </Box>
+        ))
+      ) : (
+        <Text>No trending content available</Text>
+      )}
+    </Box>
+  );
 
   return (
     <Box p={4}>
@@ -107,6 +135,7 @@ const MostWatchedContent = () => {
           <Text>{weeklySummary}</Text>
         </Box>
       )}
+      {trendingContent && <TrendingContent content={trendingContent} />}
     </Box>
   );
 };
