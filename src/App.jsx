@@ -4,12 +4,10 @@ import MostWatchedContent from './components/MostWatchedContent';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
-import NavBar from './components/NavBar';
 
 function App() {
   return (
     <ChakraProvider>
-      <NavBar />
       <Router>
         <Box textAlign="center" py={10} px={6}>
           <Routes>
