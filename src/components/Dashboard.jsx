@@ -1,4 +1,4 @@
-import { Box, Heading, Text, Button, VStack, Spinner, Alert, AlertIcon } from '@chakra-ui/react';
+import { Box, Heading, Text, Button, VStack, Spinner, Alert, AlertIcon, Input } from '@chakra-ui/react';
 import { useTasks, useAddTask, useUpdateTask, useDeleteTask } from '../integrations/supabase/index.js';
 import { useState } from 'react';
 
