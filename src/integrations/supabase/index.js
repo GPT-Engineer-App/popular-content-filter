@@ -14,7 +14,8 @@ export function SupabaseProvider({ children }) {
 const fromSupabase = async (query) => {
     const { data, error } = await query;
     if (error) {
-        console.error(error);
+        console.error('Supabase Query Error:', error.message);
+        console.error('Supabase Query:', query);
         throw new Error(error.message);
     }
     return data;
@@ -56,7 +57,11 @@ export const useUser = (id) => useQuery({
 export const useAddUser = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (newUser) => fromSupabase(supabase.from('users').insert([newUser])),
+        mutationFn: (newUser) => {
+            // Ensure ID is a string if it's a bigint in the database
+            if (newUser.id) newUser.id = newUser.id.toString();
+            return fromSupabase(supabase.from('users').insert([newUser]));
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('users');
         },
@@ -66,7 +71,11 @@ export const useAddUser = () => {
 export const useUpdateUser = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (updatedUser) => fromSupabase(supabase.from('users').update(updatedUser).eq('id', updatedUser.id)),
+        mutationFn: (updatedUser) => {
+            // Ensure ID is a string if it's a bigint in the database
+            if (updatedUser.id) updatedUser.id = updatedUser.id.toString();
+            return fromSupabase(supabase.from('users').update(updatedUser).eq('id', updatedUser.id));
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('users');
         },
@@ -76,7 +85,11 @@ export const useUpdateUser = () => {
 export const useDeleteUser = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (id) => fromSupabase(supabase.from('users').delete().eq('id', id)),
+        mutationFn: (id) => {
+            // Ensure ID is a string if it's a bigint in the database
+            if (id) id = id.toString();
+            return fromSupabase(supabase.from('users').delete().eq('id', id));
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('users');
         },
@@ -97,7 +110,11 @@ export const usePost = (id) => useQuery({
 export const useAddPost = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (newPost) => fromSupabase(supabase.from('posts').insert([newPost])),
+        mutationFn: (newPost) => {
+            // Ensure ID is a string if it's a bigint in the database
+            if (newPost.id) newPost.id = newPost.id.toString();
+            return fromSupabase(supabase.from('posts').insert([newPost]));
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('posts');
         },
@@ -107,7 +124,11 @@ export const useAddPost = () => {
 export const useUpdatePost = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (updatedPost) => fromSupabase(supabase.from('posts').update(updatedPost).eq('id', updatedPost.id)),
+        mutationFn: (updatedPost) => {
+            // Ensure ID is a string if it's a bigint in the database
+            if (updatedPost.id) updatedPost.id = updatedPost.id.toString();
+            return fromSupabase(supabase.from('posts').update(updatedPost).eq('id', updatedPost.id));
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('posts');
         },
@@ -117,7 +138,11 @@ export const useUpdatePost = () => {
 export const useDeletePost = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (id) => fromSupabase(supabase.from('posts').delete().eq('id', id)),
+        mutationFn: (id) => {
+            // Ensure ID is a string if it's a bigint in the database
+            if (id) id = id.toString();
+            return fromSupabase(supabase.from('posts').delete().eq('id', id));
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('posts');
         },
@@ -138,7 +163,11 @@ export const useTask = (id) => useQuery({
 export const useAddTask = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (newTask) => fromSupabase(supabase.from('tasks').insert([newTask])),
+        mutationFn: (newTask) => {
+            // Ensure ID is a string if it's a bigint in the database
+            if (newTask.id) newTask.id = newTask.id.toString();
+            return fromSupabase(supabase.from('tasks').insert([newTask]));
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('tasks');
         },
@@ -148,7 +177,11 @@ export const useAddTask = () => {
 export const useUpdateTask = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (updatedTask) => fromSupabase(supabase.from('tasks').update(updatedTask).eq('id', updatedTask.id)),
+        mutationFn: (updatedTask) => {
+            // Ensure ID is a string if it's a bigint in the database
+            if (updatedTask.id) updatedTask.id = updatedTask.id.toString();
+            return fromSupabase(supabase.from('tasks').update(updatedTask).eq('id', updatedTask.id));
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('tasks');
         },
@@ -158,7 +191,11 @@ export const useUpdateTask = () => {
 export const useDeleteTask = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (id) => fromSupabase(supabase.from('tasks').delete().eq('id', id)),
+        mutationFn: (id) => {
+            // Ensure ID is a string if it's a bigint in the database
+            if (id) id = id.toString();
+            return fromSupabase(supabase.from('tasks').delete().eq('id', id));
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('tasks');
         },
