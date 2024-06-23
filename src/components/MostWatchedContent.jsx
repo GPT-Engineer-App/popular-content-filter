@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Heading, Text, Select, Spinner, VStack } from '@chakra-ui/react';
+import { Box, Heading, Text, Select, Spinner, VStack, Alert, AlertIcon, FormControl, FormLabel } from '@chakra-ui/react';
 import axios from 'axios';
 
 import { fetchRottenTomatoesRatings, fetchImdbRatings, fetchOmdbRatings, fetchTmdbRatings } from '../utils/ratings';
@@ -11,6 +11,7 @@ const MostWatchedContent = () => {
   const [sorting, setSorting] = useState('views');
   const [genres, setGenres] = useState(['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi']);
   const [weeklySummary, setWeeklySummary] = useState(null);
+  const [error, setError] = useState(null);
 
   const fetchWeeklySummary = async () => {
     try {
@@ -18,30 +19,32 @@ const MostWatchedContent = () => {
       setWeeklySummary(response.data);
     } catch (error) {
       console.error('Error fetching weekly summary:', error);
+      setError('Failed to fetch weekly summary. Please try again later.');
+    }
+  };
+
+  const fetchData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [rottenTomatoesData, imdbData, omdbData, tmdbData] = await Promise.all([
+        fetchRottenTomatoesRatings('most watched', filters, sorting),
+        fetchImdbRatings('most watched', filters, sorting),
+        fetchOmdbRatings('most watched', filters, sorting),
+        fetchTmdbRatings('most watched', filters, sorting)
+      ]);
+
+      const combinedData = [...rottenTomatoesData, ...imdbData, ...omdbData, ...tmdbData];
+      setContent(combinedData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError('Failed to fetch content. Please try again later.');
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const [rottenTomatoesData, imdbData, omdbData, tmdbData] = await Promise.all([
-          fetchRottenTomatoesRatings('most watched', filters, sorting),
-          fetchImdbRatings('most watched', filters, sorting),
-          fetchOmdbRatings('most watched', filters, sorting),
-          fetchTmdbRatings('most watched', filters, sorting)
-        ]);
-
-        // Combine and process data from all APIs as needed
-        const combinedData = [...rottenTomatoesData, ...imdbData, ...omdbData, ...tmdbData];
-        setContent(combinedData);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
     fetchWeeklySummary();
   }, [filters, sorting]);
@@ -49,32 +52,38 @@ const MostWatchedContent = () => {
   return (
     <Box p={4}>
       <Heading mb={4}>Most Watched Content</Heading>
+      {error && (
+        <Alert status="error" mb={4}>
+          <AlertIcon />
+          {error}
+        </Alert>
+      )}
       <VStack spacing={4} align="stretch">
-        <Box>
-          <Text>Filter by Type:</Text>
+        <FormControl>
+          <FormLabel>Filter by Type:</FormLabel>
           <Select value={filters.type} onChange={(e) => setFilters({ ...filters, type: e.target.value })}>
             <option value="all">All</option>
             <option value="movies">Movies</option>
             <option value="shows">TV Shows</option>
           </Select>
-        </Box>
-        <Box>
-          <Text>Filter by Genre:</Text>
+        </FormControl>
+        <FormControl>
+          <FormLabel>Filter by Genre:</FormLabel>
           <Select value={filters.genre} onChange={(e) => setFilters({ ...filters, genre: e.target.value })}>
             <option value="all">All</option>
             {genres.map((genre) => (
               <option key={genre} value={genre}>{genre}</option>
             ))}
           </Select>
-        </Box>
-        <Box>
-          <Text>Sort by:</Text>
+        </FormControl>
+        <FormControl>
+          <FormLabel>Sort by:</FormLabel>
           <Select value={sorting} onChange={(e) => setSorting(e.target.value)}>
             <option value="views">Most Views</option>
             <option value="rating">Highest Rating</option>
             <option value="date">Newest</option>
           </Select>
-        </Box>
+        </FormControl>
       </VStack>
       {loading ? (
         <Spinner size="xl" />
