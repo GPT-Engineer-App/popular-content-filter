@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Heading, Text, Select, Spinner, VStack } from '@chakra-ui/react';
+
+import { fetchRottenTomatoesRatings, fetchImdbRatings, fetchOmdbRatings, fetchTmdbRatings } from '../utils/ratings';
 
 const MostWatchedContent = () => {
   const [content, setContent] = useState([]);
@@ -8,6 +10,30 @@ const MostWatchedContent = () => {
   const [sorting, setSorting] = useState('views');
   const [genres, setGenres] = useState(['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi']);
   const [weeklySummary, setWeeklySummary] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [rottenTomatoesData, imdbData, omdbData, tmdbData] = await Promise.all([
+          fetchRottenTomatoesRatings('most watched'),
+          fetchImdbRatings('most watched'),
+          fetchOmdbRatings('most watched'),
+          fetchTmdbRatings('most watched')
+        ]);
+
+        // Combine and process data from all APIs as needed
+        const combinedData = [...rottenTomatoesData, ...imdbData, ...omdbData, ...tmdbData];
+        setContent(combinedData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [filters, sorting]);
 
   return (
     <Box p={4}>
@@ -44,8 +70,8 @@ const MostWatchedContent = () => {
       ) : (
         <Box mt={4}>
           {content.length > 0 ? (
-            content.map((item) => (
-              <Box key={item.id} p={4} borderWidth="1px" borderRadius="lg" mb={4}>
+            content.map((item, index) => (
+              <Box key={index} p={4} borderWidth="1px" borderRadius="lg" mb={4}>
                 <Heading size="md">{item.title}</Heading>
                 <Text>{item.description}</Text>
               </Box>
