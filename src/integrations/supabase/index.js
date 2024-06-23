@@ -164,3 +164,9 @@ export const useDeleteTask = () => {
         },
     });
 };
+
+// Hooks for notifications table
+export const useNotifications = (userId) => useQuery({
+    queryKey: ['notifications', userId],
+    queryFn: () => fromSupabase(supabase.from('notifications').select('*').eq('user_id', userId)),
+});
